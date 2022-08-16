@@ -4,6 +4,8 @@
 
 use std::{fs::File, io::Read};
 
+mod ytdl;
+
 const BIN_NAME: &str = {
     const EXT: &str = {
         cfg_if::cfg_if! {
