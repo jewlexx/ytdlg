@@ -27,7 +27,7 @@ fn main() {
         .join("ytdlg")
         .join(BIN_NAME);
 
-    let mut target_file = File::create(BIN_NAME).unwrap();
+    let mut target_file = File::create(file_path).unwrap();
 
     reqwest::blocking::get(BIN_DOWNLOAD_URL)
         .unwrap()
