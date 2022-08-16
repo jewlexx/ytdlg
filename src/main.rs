@@ -57,13 +57,13 @@ fn dl_binary() {
             .copy_to(&mut target_file)
             .unwrap();
     } else {
-        use sha2::{Digest, Sha512};
+        use sha2::{Digest, Sha256};
 
         let mut target_file = File::open(BIN_PATH.clone()).unwrap();
         let mut target_bytes = Vec::new();
         target_file.read_to_end(&mut target_bytes).unwrap();
 
-        let mut hasher = Sha512::new();
+        let mut hasher = Sha256::new();
 
         hasher.update(&target_bytes);
 
