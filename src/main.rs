@@ -68,11 +68,11 @@ fn dl_binary() {
         hasher.update(&target_bytes);
 
         let response = hasher.finalize();
-        let mut sum_hex = Vec::new();
+        let mut sum_hex = [0; 256];
 
         hex::encode_to_slice(CHECK_SUM, &mut sum_hex).unwrap();
 
-        assert_eq!(response[..], sum_hex);
+        assert_eq!(response[..], sum_hex[..]);
     }
 }
 
