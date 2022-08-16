@@ -8,9 +8,9 @@ const BIN_NAME: &str = {
             if #[cfg(not(target_arch = "x86_64"))] {
                 compile_error!("Currently only x86_64 is supported");
             } else if #[cfg(windows)] {
-                "youtube-dl.exe"
+                ".exe"
             } else {
-                "youtube-dl"
+                ""
             }
         }
     };
