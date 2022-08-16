@@ -20,6 +20,18 @@ const BIN_NAME: &str = {
     const_format::concatcp!("youtube-dl", EXT)
 };
 
+const CHECK_SUM: &str = {
+    cfg_if::cfg_if! {
+        if #[cfg(not(target_arch = "x86_64"))] {
+            compile_error!("Currently only x86_64 is supported");
+        } else if #[cfg(windows)] {
+            include_str!("sums/youtube-dl.exe.sum")
+        } else {
+            include_str!("sums/youtube-dl.sum")
+        }
+    }
+};
+
 const BIN_DOWNLOAD_URL: &str =
     const_format::concatcp!("https://youtube-dl.org/downloads/2021.12.17/", BIN_NAME);
 
