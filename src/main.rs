@@ -43,12 +43,16 @@ lazy_static::lazy_static! {
 }
 
 fn main() {
-    let mut target_file = File::create(BIN_PATH.clone()).unwrap();
+    if !BIN_PATH.clone().exists() {
+        let mut target_file = File::create(BIN_PATH.clone()).unwrap();
 
-    reqwest::blocking::get(BIN_DOWNLOAD_URL)
-        .unwrap()
-        .copy_to(&mut target_file)
-        .unwrap();
+        reqwest::blocking::get(BIN_DOWNLOAD_URL)
+            .unwrap()
+            .copy_to(&mut target_file)
+            .unwrap();
+    } else {
+        let target_file = File::open(BIN_PATH.clone()).unwrap();
+    }
 
     println!("Hello, world!");
 }
