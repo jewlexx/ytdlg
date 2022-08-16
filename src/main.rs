@@ -2,8 +2,6 @@
 
 use std::{fs::File, io::Read};
 
-use egui::Widget;
-
 mod consts;
 mod sums;
 mod ytdl;
