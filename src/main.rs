@@ -53,6 +53,12 @@ fn dl_binary() {
 }
 
 fn main() {
+    human_panic::setup_panic!(Metadata {
+        authors: "Juliette Cordor",
+        name: "Youtube-DL Gui",
+        version: env!("CARGO_PKG_VERSION"),
+    });
+
     dl_binary();
 
     let options = eframe::NativeOptions::default();
