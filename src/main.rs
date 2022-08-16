@@ -56,6 +56,7 @@ fn main() {
     human_panic::setup_panic!(Metadata {
         authors: "Juliette Cordor",
         name: "Youtube-DL Gui",
+        homepage: "https://github.com/jewlexx/ytdlg",
         version: env!("CARGO_PKG_VERSION"),
     });
 
