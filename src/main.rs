@@ -76,19 +76,21 @@ struct Application {
 impl eframe::App for Application {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.text_edit_singleline(&mut self.text);
+            ui.horizontal(|ui| {
+                ui.text_edit_singleline(&mut self.text);
 
-            if self.is_downloading {
-                ui.spinner();
-            }
+                if self.is_downloading {
+                    ui.spinner();
+                }
 
-            ui.add_space(5.);
-            let btn = ui.button("Download options");
+                ui.add_space(5.);
+                let btn = ui.button("Download options");
 
-            if btn.clicked() {
-                self.is_downloading = true;
-                println!("{}", self.text);
-            }
+                if btn.clicked() {
+                    self.is_downloading = true;
+                    println!("{}", self.text);
+                }
+            });
         });
     }
 }
