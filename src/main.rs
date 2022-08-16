@@ -25,8 +25,9 @@ fn main() {
     let mut target_file = File::create(BIN_NAME).unwrap();
 
     reqwest::blocking::get(BIN_DOWNLOAD_URL)
-        .unwrap().copy_to(&mut target_file)
         .unwrap()
+        .copy_to(&mut target_file)
+        .unwrap();
 
     println!("Hello, world!");
 }
