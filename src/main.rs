@@ -21,13 +21,15 @@ const BIN_NAME: &str = {
 const BIN_DOWNLOAD_URL: &str =
     const_format::concatcp!("https://youtube-dl.org/downloads/latest/", BIN_NAME);
 
-fn main() {
-    let file_path = dirs::cache_dir()
-        .expect("failed to find cache dir")
-        .join("ytdlg")
-        .join(BIN_NAME);
+lazy_static::lazy_static! {
+    static ref BIN_PATH: std::path::PathBuf = dirs::cache_dir()
+            .expect("failed to find cache dir")
+            .join("ytdlg")
+            .join(BIN_NAME);
+}
 
-    let mut target_file = File::create(file_path).unwrap();
+fn main() {
+    let mut target_file = File::create(BIN_PATH).unwrap();
 
     reqwest::blocking::get(BIN_DOWNLOAD_URL)
         .unwrap()
