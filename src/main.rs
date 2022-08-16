@@ -86,7 +86,13 @@ fn dl_binary() {
 
 fn main() {
     dl_binary();
-    println!("Hello, world!");
+
+    let options = eframe::NativeOptions::default();
+    eframe::run_native(
+        "Download and show an image with eframe/egui",
+        options,
+        Box::new(|_cc| Box::new(Application::default())),
+    );
 }
 
 #[derive(Default)]
