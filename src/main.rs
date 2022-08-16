@@ -42,6 +42,29 @@ lazy_static::lazy_static! {
             .join(BIN_NAME);
 }
 
+fn check_integrity() -> Result<(), &'static str> {
+    use sha2::{Digest, Sha256};
+
+    let mut target_file = File::open(BIN_PATH.clone()).unwrap();
+    let mut target_bytes = Vec::new();
+    target_file.read_to_end(&mut target_bytes).unwrap();
+
+    let mut hasher = Sha256::new();
+
+    hasher.update(&target_bytes);
+
+    let response = hasher.finalize();
+    let mut sum_hex = [0; 32];
+
+    hex::decode_to_slice(CHECK_SUM, &mut sum_hex).unwrap();
+
+    if response[..] == sum_hex {
+        Ok(())
+    } else {
+        Err("Checksum mismatch")
+    }
+}
+
 fn dl_binary() {
     if !BIN_PATH.clone().exists() {
         {
@@ -56,24 +79,9 @@ fn dl_binary() {
             .unwrap()
             .copy_to(&mut target_file)
             .unwrap();
-    } else {
-        use sha2::{Digest, Sha256};
-
-        let mut target_file = File::open(BIN_PATH.clone()).unwrap();
-        let mut target_bytes = Vec::new();
-        target_file.read_to_end(&mut target_bytes).unwrap();
-
-        let mut hasher = Sha256::new();
-
-        hasher.update(&target_bytes);
-
-        let response = hasher.finalize();
-        let mut sum_hex = [0; 32];
-
-        hex::decode_to_slice(CHECK_SUM, &mut sum_hex).unwrap();
-
-        assert_eq!(response[..], sum_hex[..]);
     }
+
+    check_integrity().expect("integrity check failed");
 }
 
 fn main() {
