@@ -19,7 +19,7 @@ const BIN_NAME: &str = {
 };
 
 const BIN_DOWNLOAD_URL: &str =
-    const_format::concatcp!("https://youtube-dl.org/downloads/latest/", BIN_NAME);
+    const_format::concatcp!("https://youtube-dl.org/downloads/2021.12.17/", BIN_NAME);
 
 lazy_static::lazy_static! {
     static ref BIN_PATH: std::path::PathBuf = dirs::cache_dir()
