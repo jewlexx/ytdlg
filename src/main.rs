@@ -43,6 +43,8 @@ lazy_static::lazy_static! {
 }
 
 fn dl_binary() {
+    use sha2::Sha512;
+
     if !BIN_PATH.clone().exists() {
         let mut target_file = File::create(BIN_PATH.clone()).unwrap();
 
@@ -54,6 +56,8 @@ fn dl_binary() {
         let mut target_file = File::open(BIN_PATH.clone()).unwrap();
         let mut target_bytes = Vec::new();
         target_file.read_to_end(&mut target_bytes).unwrap();
+
+        let mut hasher = Sha512::new();
     }
 }
 
