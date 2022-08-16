@@ -42,7 +42,7 @@ lazy_static::lazy_static! {
             .join(BIN_NAME);
 }
 
-fn main() {
+fn dl_binary() {
     if !BIN_PATH.clone().exists() {
         let mut target_file = File::create(BIN_PATH.clone()).unwrap();
 
@@ -53,6 +53,9 @@ fn main() {
     } else {
         let target_file = File::open(BIN_PATH.clone()).unwrap();
     }
+}
 
+fn main() {
+    dl_binary();
     println!("Hello, world!");
 }
