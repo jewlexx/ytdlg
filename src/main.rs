@@ -2,7 +2,7 @@
 
 // TODO: Build in checksums
 
-use std::fs::File;
+use std::{fs::File, io::Read};
 
 const BIN_NAME: &str = {
     const EXT: &str = {
@@ -51,7 +51,9 @@ fn dl_binary() {
             .copy_to(&mut target_file)
             .unwrap();
     } else {
-        let target_file = File::open(BIN_PATH.clone()).unwrap();
+        let mut target_file = File::open(BIN_PATH.clone()).unwrap();
+        let mut target_bytes = Vec::new();
+        target_file.read_to_end(&mut target_bytes).unwrap();
     }
 }
 
