@@ -22,6 +22,11 @@ const BIN_DOWNLOAD_URL: &str =
     const_format::concatcp!("https://youtube-dl.org/downloads/latest/", BIN_NAME);
 
 fn main() {
+    let file_path = dirs::cache_dir()
+        .expect("failed to find cache dir")
+        .join("ytdlg")
+        .join(BIN_NAME);
+
     let mut target_file = File::create(BIN_NAME).unwrap();
 
     reqwest::blocking::get(BIN_DOWNLOAD_URL)
