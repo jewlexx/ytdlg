@@ -62,9 +62,11 @@ fn dl_binary() {
         hasher.update(&target_bytes);
 
         let response = hasher.finalize();
-        let mut sum_hex: &mut [u8] = &mut [];
+        let mut sum_hex = Vec::new();
 
-        hex::encode_to_slice(CHECK_SUM, sum_hex).unwrap();
+        hex::encode_to_slice(CHECK_SUM, &mut sum_hex).unwrap();
+
+        assert_eq!(response[..], sum_hex);
     }
 }
 
