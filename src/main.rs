@@ -29,7 +29,7 @@ lazy_static::lazy_static! {
 }
 
 fn main() {
-    let mut target_file = File::create(BIN_PATH).unwrap();
+    let mut target_file = File::create(BIN_PATH.clone()).unwrap();
 
     reqwest::blocking::get(BIN_DOWNLOAD_URL)
         .unwrap()
