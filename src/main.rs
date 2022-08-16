@@ -44,6 +44,12 @@ lazy_static::lazy_static! {
 
 fn dl_binary() {
     if !BIN_PATH.clone().exists() {
+        {
+            let mut dir_path = BIN_PATH.clone();
+            dir_path.pop();
+            std::fs::create_dir_all(dir_path).unwrap();
+        }
+
         let mut target_file = File::create(BIN_PATH.clone()).unwrap();
 
         reqwest::blocking::get(BIN_DOWNLOAD_URL)
