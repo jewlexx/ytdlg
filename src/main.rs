@@ -35,7 +35,7 @@ fn check_integrity() -> Result<(), &'static str> {
     }
 }
 
-fn dl_binary() {
+async fn dl_binary() {
     use consts::{BIN_DOWNLOAD_URL, BIN_PATH};
 
     if !BIN_PATH.clone().exists() {
@@ -47,7 +47,8 @@ fn dl_binary() {
 
         let mut target_file = File::create(BIN_PATH.clone()).unwrap();
 
-        reqwest::blocking::get(BIN_DOWNLOAD_URL)
+        reqwest::get(BIN_DOWNLOAD_URL)
+            .await
             .unwrap()
             .copy_to(&mut target_file)
             .unwrap();
