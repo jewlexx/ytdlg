@@ -128,6 +128,7 @@ impl eframe::App for Application {
         egui::CentralPanel::default().show(ctx, |ui| {
             let downloaded = BIN_DOWNLOAD.lock().0;
             let total = BIN_DOWNLOAD.lock().1;
+            println!("{}/{}", downloaded, total);
             if downloaded != total {
                 let w = egui::ProgressBar::new((downloaded / total) as f32).animate(true);
                 ui.add(w);
