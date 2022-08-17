@@ -151,7 +151,7 @@ impl eframe::App for Application {
                     for format in &manifest.formats {
                         if format.width.is_some() {
                             ui.horizontal(|ui| {
-                                let _ = ui.selectable_label(false, &format.format_id);
+                                let dl_btn = ui.button("Download this format");
                                 ui.strong(format!("Fps: {}", format.fps.as_ref().unwrap()));
 
                                 ui.strong(format!(
