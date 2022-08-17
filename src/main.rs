@@ -144,7 +144,16 @@ impl eframe::App for Application {
 
                 if let Some(manifest) = self.manifest.as_ref().and_then(|p| p.ready()) {
                     self.is_downloading = false;
-                    println!("{:?}", manifest);
+                    if let Some(title) = &manifest.title {
+                        ui.heading(title);
+                    }
+
+                    for format in &manifest.formats {
+                        ui.horizontal(|ui| {
+                            ui.strong(format.format_id.as_ref().expect("no format id"));
+                            ui.small(format!("{:?}", format));
+                        });
+                    }
                 }
             });
         });
