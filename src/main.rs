@@ -66,6 +66,10 @@ fn main() {
             writeln!(&mut msg, "   Panicked at: {}", info.location().unwrap()).unwrap();
         }
 
+        if let Some(args) = info.payload() {
+            writeln!(&mut msg, "   With Message: {}", args).unwrap();
+        }
+
         MessageDialog::default()
             .set_type(MessageType::Error)
             .set_text(&msg)
