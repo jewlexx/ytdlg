@@ -53,7 +53,17 @@ fn dl_binary() {
 }
 
 fn main() {
-    human_panic::setup_panic!();
+    std::panic::set_hook(Box::new(|info| {
+        use dialog_box::error;
+
+        let mut msg = String::from("An error occurred:\n");
+
+        if cfg!(debug_assertions) {
+            msg.push_str(&format!("{}\n", info.location().unwrap().to_string()));
+
+            eprintln!("{}", info);
+        }
+    }));
 
     dl_binary();
 
