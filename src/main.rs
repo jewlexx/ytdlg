@@ -117,6 +117,12 @@ impl eframe::App for Application {
                 let btn = ui.button("Download options");
 
                 if btn.clicked() {
+                    if let Some(p) = self.manifest.as_ref().and_then(|p| p.ready()) {
+                        if p.webpage_url == Some(self.yt_url.clone()) {
+                            return;
+                        }
+                    }
+
                     let url = self.yt_url.clone();
 
                     let _ = self.manifest.insert(Promise::spawn_thread(
