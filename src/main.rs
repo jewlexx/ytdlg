@@ -80,7 +80,9 @@ async fn main() {
 
             let res = reqwest::get(BIN_DOWNLOAD_URL).await.unwrap();
             let size = res.content_length().expect("failed to get content length");
-            BIN_DOWNLOAD.lock().1 = size;
+            {
+                let dl = BIN_DOWNLOAD.lock();
+            };
             let mut downloaded = 0;
             let mut stream = res.bytes_stream();
 
@@ -89,7 +91,7 @@ async fn main() {
                 target_file.write_all(&chunk).unwrap();
                 let new = std::cmp::min(downloaded + (chunk.len() as u64), size);
                 downloaded = new;
-                BIN_DOWNLOAD.lock().0 = new;
+                BIN_DOWNLOAD.lock().set_progress(new);
             }
 
             #[cfg(not(windows))]
@@ -100,7 +102,7 @@ async fn main() {
                     .unwrap();
             }
         } else {
-            BIN_DOWNLOAD.lock().1 = 0;
+            BIN_DOWNLOAD.lock().set_total(0);
         }
 
         check_integrity().expect("integrity check failed");
@@ -121,7 +123,18 @@ struct Application {
     manifest: Option<Promise<YtdlManifest>>,
 }
 
-static BIN_DOWNLOAD: Mutex<(u64, u64)> = Mutex::new((0, 1));
+struct DownloadStatus(pub u64, pub u64);
+
+impl DownloadStatus {
+    pub fn set_progress(&mut self, progress: u64) {
+        self.0 = progress;
+    }
+    pub fn set_total(&mut self, total: u64) {
+        self.1 = total;
+    }
+}
+
+static BIN_DOWNLOAD: Mutex<DownloadStatus> = Mutex::new(DownloadStatus(0, 1));
 
 impl eframe::App for Application {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
