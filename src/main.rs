@@ -1,6 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
-use std::{fs::File, io::Read, os::unix::prelude::PermissionsExt, process::Command};
+use std::{fs::File, io::Read, process::Command};
 
 use indicatif::ProgressBar;
 use native_dialog::MessageType;
@@ -92,9 +92,13 @@ async fn main() {
                 BIN_DOWNLOAD.lock().0 = new;
             }
 
-            target_file
-                .set_permissions(std::fs::Permissions::from_mode(0o755))
-                .unwrap();
+            #[cfg(not(windows))]
+            {
+                use std::os::unix::prelude::PermissionsExt;
+                target_file
+                    .set_permissions(std::fs::Permissions::from_mode(0o755))
+                    .unwrap();
+            }
         }
 
         check_integrity().expect("integrity check failed");
