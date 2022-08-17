@@ -66,7 +66,9 @@ fn main() {
             writeln!(&mut msg, "   Panicked at: {}", info.location().unwrap()).unwrap();
         }
 
-        writeln!(&mut msg, "   With Message: {:?}", info.payload()).unwrap();
+        if let Some(payload) = info.payload().downcast_ref::<&'static str>() {
+            writeln!(&mut msg, "   With Message: '{}', ", payload).unwrap();
+        }
 
         MessageDialog::default()
             .set_type(MessageType::Error)
