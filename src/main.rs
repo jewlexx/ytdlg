@@ -155,8 +155,8 @@ impl<'a, T> LockMap<T> for MutexGuard<'a, T> {
 impl eframe::App for Application {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            let downloaded = BIN_DOWNLOAD.lock().0;
-            let total = BIN_DOWNLOAD.lock().1;
+            let (downloaded, total) = BIN_DOWNLOAD.lock().map(|d| (d.0, d.1));
+
             if downloaded != total {
                 let w = egui::ProgressBar::new((downloaded / total) as f32)
                     .animate(true)
