@@ -59,7 +59,7 @@ fn main() {
         let mut msg = String::from("An error occurred:\n");
 
         if cfg!(debug_assertions) {
-            msg.push_str(&format!("{}\n", info.location().unwrap().to_string()));
+            msg.push_str(&format!("{}\n", info.location().unwrap()));
 
             eprintln!("{}", info);
         }
