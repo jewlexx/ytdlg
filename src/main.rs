@@ -80,6 +80,7 @@ async fn main() {
 
             let res = reqwest::get(BIN_DOWNLOAD_URL).await.unwrap();
             let size = res.content_length().expect("failed to get content length");
+            BIN_DOWNLOAD.lock().1 = size;
             let mut downloaded = 0;
             let mut stream = res.bytes_stream();
 
@@ -88,6 +89,7 @@ async fn main() {
                 target_file.write_all(&chunk).unwrap();
                 let new = std::cmp::min(downloaded + (chunk.len() as u64), size);
                 downloaded = new;
+                BIN_DOWNLOAD.lock().0 = new;
             }
 
             target_file
