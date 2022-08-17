@@ -71,6 +71,7 @@ fn main() {
         }
 
         MessageDialog::default()
+            .set_title("YTDLG Error")
             .set_type(MessageType::Error)
             .set_text(&msg)
             .show_alert()
