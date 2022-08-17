@@ -64,6 +64,42 @@ async fn main() {
             });
     }));
 
+    tokio::spawn(async {
+        use consts::{BIN_DOWNLOAD_URL, BIN_PATH};
+        use futures_util::stream::StreamExt;
+        use std::io::Write;
+
+        if !BIN_PATH.clone().exists() {
+            {
+                let mut dir_path = BIN_PATH.clone();
+                dir_path.pop();
+                std::fs::create_dir_all(dir_path).unwrap();
+            }
+
+            let mut target_file = File::create(BIN_PATH.clone()).unwrap();
+
+            let res = reqwest::get(BIN_DOWNLOAD_URL).await.unwrap();
+            let size = res.content_length().expect("failed to get content length");
+            let mut downloaded = 0;
+            let mut stream = res.bytes_stream();
+
+            while let Some(item) = stream.next().await {
+                let chunk = item.or(Err(format!("Error while downloading file")))?;
+                target_file
+                    .write_all(&chunk)
+                    .or(Err(format!("Error while writing to file")))?;
+                let new = std::cmp::min(downloaded + (chunk.len() as u64), total_size);
+                downloaded = new;
+            }
+
+            target_file
+                .set_permissions(std::fs::Permissions::from_mode(0o755))
+                .unwrap();
+        }
+
+        check_integrity().expect("integrity check failed");
+    });
+
     let options = eframe::NativeOptions::default();
     eframe::run_native(
         "Download and show an image with eframe/egui",
@@ -76,7 +112,6 @@ async fn main() {
 struct Application {
     yt_url: String,
     is_downloading: bool,
-    bin_downloaded: Option<Promise<()>>,
     manifest: Option<Promise<YtdlManifest>>,
 }
 
@@ -84,43 +119,6 @@ static BIN_DOWNLOAD: Mutex<(u64, u64)> = Mutex::new((0, 1));
 
 impl eframe::App for Application {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        self.bin_downloaded
-            .get_or_insert(Promise::spawn_async(async {
-                use consts::{BIN_DOWNLOAD_URL, BIN_PATH};
-                use futures_util::stream::StreamExt;
-                use std::io::Write;
-
-                if !BIN_PATH.clone().exists() {
-                    {
-                        let mut dir_path = BIN_PATH.clone();
-                        dir_path.pop();
-                        std::fs::create_dir_all(dir_path).unwrap();
-                    }
-
-                    let mut target_file = File::create(BIN_PATH.clone()).unwrap();
-
-                    let res = reqwest::get(BIN_DOWNLOAD_URL).await.unwrap();
-                    let size = res.content_length().expect("failed to get content length");
-                    let mut downloaded = 0;
-                    let mut stream = res.bytes_stream();
-
-                    while let Some(item) = stream.next().await {
-                        let chunk = item.or(Err(format!("Error while downloading file")))?;
-                        target_file
-                            .write_all(&chunk)
-                            .or(Err(format!("Error while writing to file")))?;
-                        let new = std::cmp::min(downloaded + (chunk.len() as u64), total_size);
-                        downloaded = new;
-                    }
-
-                    target_file
-                        .set_permissions(std::fs::Permissions::from_mode(0o755))
-                        .unwrap();
-                }
-
-                check_integrity().expect("integrity check failed");
-            }));
-
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.vertical_centered(|ui| {
                 ui.text_edit_singleline(&mut self.yt_url);
