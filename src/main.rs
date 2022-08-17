@@ -87,6 +87,7 @@ impl eframe::App for Application {
         self.bin_downloaded
             .get_or_insert(Promise::spawn_async(async {
                 use consts::{BIN_DOWNLOAD_URL, BIN_PATH};
+                use futures_util::stream::stream::StreamExt;
 
                 if !BIN_PATH.clone().exists() {
                     {
@@ -98,6 +99,17 @@ impl eframe::App for Application {
                     let mut target_file = File::create(BIN_PATH.clone()).unwrap();
 
                     let res = reqwest::get(BIN_DOWNLOAD_URL).await.unwrap();
+                    let mut downloaded = 0;
+                    let mut stream = res.bytes_stream();
+
+                    while let Some(item) = stream.next().await {
+                        let chunk = item.or(Err(format!("Error while downloading file")))?;
+                        target_file
+                            .write_all(&chunk)
+                            .or(Err(format!("Error while writing to file")))?;
+                        let new = std::cmp::min(downloaded + (chunk.len() as u64), total_size);
+                        downloaded = new;
+                    }
 
                     let size = res.content_length().expect("failed to get content length");
 
