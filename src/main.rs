@@ -117,7 +117,8 @@ impl eframe::App for Application {
                     self.manifest
                         .insert(Promise::spawn_thread("download_manifest", move || {
                             let path = consts::BIN_PATH.clone();
-                            let mut cmd = Command::new(path).arg(url).arg("--dump-json");
+                            let mut cmd = Command::new(path);
+                            cmd.arg(url).arg("--dump-json");
 
                             let out = cmd.output().expect("failed to get output");
 
