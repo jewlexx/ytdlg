@@ -66,8 +66,10 @@ fn main() {
             eprintln!("{}", info);
         }
 
-        error(&msg);
+        println!("{}", error(&msg));
     }));
+
+    panic!("woops");
 
     dl_binary();
 
