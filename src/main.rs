@@ -2,6 +2,8 @@
 
 use std::{fs::File, io::Read};
 
+use native_dialog::MessageType;
+
 mod consts;
 mod sums;
 mod ytdl;
@@ -57,6 +59,7 @@ fn main() {
         use std::fmt::Write;
 
         use dialog_box::error;
+        use native_dialog::MessageDialog;
 
         let mut msg = String::from("An error occurred:\n");
 
@@ -66,7 +69,11 @@ fn main() {
             eprintln!("{}", info);
         }
 
-        println!("{}", error(&msg));
+        MessageDialog::default()
+            .set_type(MessageType::Error)
+            .set_text(&msg)
+            .show_alert()
+            .unwrap();
     }));
 
     panic!("woops");
