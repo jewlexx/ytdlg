@@ -1,6 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
-use std::{fs::File, io::Read, process::Command};
+use std::{fs::File, io::Read, os::unix::prelude::PermissionsExt, process::Command};
 
 use native_dialog::MessageType;
 use poll_promise::Promise;
@@ -50,6 +50,10 @@ fn dl_binary() {
         reqwest::blocking::get(BIN_DOWNLOAD_URL)
             .unwrap()
             .copy_to(&mut target_file)
+            .unwrap();
+
+        target_file
+            .set_permissions(std::fs::Permissions::from_mode(0o755))
             .unwrap();
     }
 
