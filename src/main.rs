@@ -150,10 +150,7 @@ impl eframe::App for Application {
 
                     for format in &manifest.formats {
                         ui.horizontal(|ui| {
-                            let _ = ui.selectable_label(
-                                format.selected,
-                                format.format_id.as_ref().unwrap(),
-                            );
+                            let _ = ui.selectable_label(false, format.format_id.as_ref().unwrap());
                         });
                     }
                 }

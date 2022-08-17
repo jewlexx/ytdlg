@@ -89,7 +89,6 @@ pub struct Format {
     pub protocol: Option<Protocol>,
     pub http_headers: Option<HttpHeaders>,
     pub vbr: Option<f64>,
-    pub selected: bool,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
