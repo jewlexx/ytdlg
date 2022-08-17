@@ -120,6 +120,10 @@ static BIN_DOWNLOAD: Mutex<(u64, u64)> = Mutex::new((0, 1));
 impl eframe::App for Application {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
+            if BIN_DOWNLOAD.lock().0 == { BIN_DOWNLOAD.lock().1 } {
+                self.is_downloading = false;
+            }
+
             ui.vertical_centered(|ui| {
                 ui.text_edit_singleline(&mut self.yt_url);
 
