@@ -71,7 +71,7 @@ pub struct Chapter {
 pub struct Format {
     pub asr: Option<i64>,
     pub filesize: Option<i64>,
-    pub format_id: Option<String>,
+    pub format_id: String,
     pub format_note: Option<String>,
     pub fps: Option<i64>,
     pub height: Option<i64>,
@@ -79,7 +79,7 @@ pub struct Format {
     pub tbr: Option<f64>,
     pub url: Option<String>,
     pub width: Option<i64>,
-    pub ext: Option<YtdlManifestExt>,
+    pub ext: YtdlManifestExt,
     pub vcodec: Option<String>,
     pub acodec: Option<Acodec>,
     pub abr: Option<f64>,

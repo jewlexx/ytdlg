@@ -149,9 +149,18 @@ impl eframe::App for Application {
                     }
 
                     for format in &manifest.formats {
-                        ui.horizontal(|ui| {
-                            let _ = ui.selectable_label(false, format.format_id.as_ref().unwrap());
-                        });
+                        if format.width.is_some() {
+                            ui.horizontal(|ui| {
+                                let _ = ui.selectable_label(false, &format.format_id);
+                                ui.strong(format!("Fps: {}", format.fps.as_ref().unwrap()));
+
+                                ui.strong(format!(
+                                    "Resolution: {}x{}",
+                                    format.width.as_ref().unwrap(),
+                                    format.height.as_ref().unwrap()
+                                ));
+                            });
+                        }
                     }
                 }
             });
