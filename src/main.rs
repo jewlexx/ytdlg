@@ -54,12 +54,14 @@ fn dl_binary() {
 
 fn main() {
     std::panic::set_hook(Box::new(|info| {
+        use std::fmt::Write;
+
         use dialog_box::error;
 
         let mut msg = String::from("An error occurred:\n");
 
         if cfg!(debug_assertions) {
-            writeln!(s, "   Panicked at: {}", info.location().unwrap()).unwrap();
+            writeln!(&mut msg, "   Panicked at: {}", info.location().unwrap()).unwrap();
 
             eprintln!("{}", info);
         }
