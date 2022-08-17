@@ -64,15 +64,15 @@ fn main() {
 
         if cfg!(debug_assertions) {
             writeln!(&mut msg, "   Panicked at: {}", info.location().unwrap()).unwrap();
-
-            eprintln!("{}", info);
         }
 
         MessageDialog::default()
             .set_type(MessageType::Error)
             .set_text(&msg)
             .show_alert()
-            .unwrap();
+            .unwrap_or_else(|_| {
+                eprintln!("{}", info);
+            });
     }));
 
     panic!("woops");
