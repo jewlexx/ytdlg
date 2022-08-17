@@ -84,11 +84,9 @@ async fn main() {
             let mut stream = res.bytes_stream();
 
             while let Some(item) = stream.next().await {
-                let chunk = item.or(Err(format!("Error while downloading file")))?;
-                target_file
-                    .write_all(&chunk)
-                    .or(Err(format!("Error while writing to file")))?;
-                let new = std::cmp::min(downloaded + (chunk.len() as u64), total_size);
+                let chunk = item.unwrap();
+                target_file.write_all(&chunk).unwrap();
+                let new = std::cmp::min(downloaded + (chunk.len() as u64), size);
                 downloaded = new;
             }
 
