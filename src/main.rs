@@ -96,7 +96,7 @@ fn main() {
 struct Application {
     text: String,
     is_downloading: bool,
-    manifet: Option<Promise<YtdlManifest>>,
+    manifest: Option<Promise<YtdlManifest>>,
 }
 
 impl eframe::App for Application {
