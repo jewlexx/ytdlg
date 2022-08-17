@@ -11,6 +11,7 @@ lto = true
 [dependencies]
 cfg-if = "1.0.0"
 const_format = "0.2.26"
+dialog-box = "0.1.0"
 dirs = "4.0.0"
 eframe = { version = "0.18.0", features = ["dark-light"] }
 egui = "0.18.1"
