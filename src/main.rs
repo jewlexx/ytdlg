@@ -3,6 +3,8 @@
 use std::{fs::File, io::Read};
 
 use native_dialog::MessageType;
+use poll_promise::Promise;
+use ytdl::YtdlManifest;
 
 mod consts;
 mod sums;
@@ -94,6 +96,7 @@ fn main() {
 struct Application {
     text: String,
     is_downloading: bool,
+    manifet: Option<Promise<YtdlManifest>>,
 }
 
 impl eframe::App for Application {
