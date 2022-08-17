@@ -80,9 +80,7 @@ async fn main() {
 
             let res = reqwest::get(BIN_DOWNLOAD_URL).await.unwrap();
             let size = res.content_length().expect("failed to get content length");
-            {
-                let dl = BIN_DOWNLOAD.lock();
-            };
+            println!("{}", size);
             let mut downloaded = 0;
             let mut stream = res.bytes_stream();
 
@@ -91,6 +89,7 @@ async fn main() {
                 target_file.write_all(&chunk).unwrap();
                 let new = std::cmp::min(downloaded + (chunk.len() as u64), size);
                 downloaded = new;
+                println!("size: {}", new);
                 BIN_DOWNLOAD.lock().set_progress(new);
             }
 
@@ -143,7 +142,9 @@ impl eframe::App for Application {
             let total = BIN_DOWNLOAD.lock().1;
             println!("{}/{}", downloaded, total);
             if downloaded != total {
-                let w = egui::ProgressBar::new((downloaded / total) as f32).animate(true);
+                let w = egui::ProgressBar::new((downloaded / total) as f32)
+                    .animate(true)
+                    .show_percentage();
                 ui.add(w);
                 return;
             }
@@ -178,7 +179,7 @@ impl eframe::App for Application {
                     }));
 
                     self.is_downloading = true;
-                    println!("{}", self.yt_url);
+                    // println!("{}", self.yt_url);
                 }
 
                 if let Some(manifest) = self.manifest.as_ref().and_then(|p| p.ready()) {
