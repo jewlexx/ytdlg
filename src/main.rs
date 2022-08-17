@@ -58,7 +58,6 @@ fn main() {
     std::panic::set_hook(Box::new(|info| {
         use std::fmt::Write;
 
-        use dialog_box::error;
         use native_dialog::MessageDialog;
 
         let mut msg = String::from("An error occurred:\n");
