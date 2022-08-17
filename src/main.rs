@@ -131,6 +131,7 @@ impl eframe::App for Application {
                     .animate(true)
                     .show_percentage();
                 ui.add(w);
+                return;
             }
 
             ui.vertical_centered(|ui| {
