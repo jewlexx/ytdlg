@@ -4,110 +4,110 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct YtdlManifest {
-    pub id: String,
-    pub title: String,
-    pub formats: Vec<Format>,
-    pub thumbnails: Vec<Thumbnail>,
-    pub description: String,
-    pub upload_date: String,
-    pub uploader: String,
-    pub uploader_id: String,
-    pub uploader_url: String,
-    pub channel_id: String,
-    pub channel_url: String,
-    pub duration: i64,
-    pub view_count: i64,
+    pub id: Option<String>,
+    pub title: Option<String>,
+    pub formats: Option<Vec<Format>>,
+    pub thumbnails: Option<Vec<Thumbnail>>,
+    pub description: Option<String>,
+    pub upload_date: Option<String>,
+    pub uploader: Option<String>,
+    pub uploader_id: Option<String>,
+    pub uploader_url: Option<String>,
+    pub channel_id: Option<String>,
+    pub channel_url: Option<String>,
+    pub duration: Option<i64>,
+    pub view_count: Option<i64>,
     pub average_rating: Option<serde_json::Value>,
-    pub age_limit: i64,
-    pub webpage_url: String,
-    pub categories: Vec<String>,
-    pub tags: Vec<String>,
+    pub age_limit: Option<i64>,
+    pub webpage_url: Option<String>,
+    pub categories: Option<Vec<String>>,
+    pub tags: Option<Vec<String>>,
     pub is_live: Option<serde_json::Value>,
-    pub automatic_captions: HashMap<String, Vec<AutomaticCaption>>,
-    pub subtitles: Subtitles,
-    pub chapters: Vec<Chapter>,
-    pub like_count: i64,
-    pub channel: String,
-    pub extractor: String,
-    pub webpage_url_basename: String,
-    pub extractor_key: String,
+    pub automatic_captions: Option<HashMap<String, Vec<AutomaticCaption>>>,
+    pub subtitles: Option<Subtitles>,
+    pub chapters: Option<Vec<Chapter>>,
+    pub like_count: Option<i64>,
+    pub channel: Option<String>,
+    pub extractor: Option<String>,
+    pub webpage_url_basename: Option<String>,
+    pub extractor_key: Option<String>,
     pub playlist: Option<serde_json::Value>,
     pub playlist_index: Option<serde_json::Value>,
-    pub thumbnail: String,
-    pub display_id: String,
+    pub thumbnail: Option<String>,
+    pub display_id: Option<String>,
     pub requested_subtitles: Option<serde_json::Value>,
-    pub requested_formats: Vec<Format>,
-    pub format: String,
-    pub format_id: String,
-    pub width: i64,
-    pub height: i64,
+    pub requested_formats: Option<Vec<Format>>,
+    pub format: Option<String>,
+    pub format_id: Option<String>,
+    pub width: Option<i64>,
+    pub height: Option<i64>,
     pub resolution: Option<serde_json::Value>,
-    pub fps: i64,
-    pub vcodec: String,
-    pub vbr: f64,
+    pub fps: Option<i64>,
+    pub vcodec: Option<String>,
+    pub vbr: Option<f64>,
     pub stretched_ratio: Option<serde_json::Value>,
-    pub acodec: Acodec,
-    pub abr: f64,
-    pub ext: YtdlManifestExt,
-    pub fulltitle: String,
+    pub acodec: Option<Acodec>,
+    pub abr: Option<f64>,
+    pub ext: Option<YtdlManifestExt>,
+    pub fulltitle: Option<String>,
     #[serde(rename = "_filename")]
-    pub filename: String,
+    pub filename: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AutomaticCaption {
-    pub ext: AutomaticCaptionExt,
-    pub url: String,
+    pub ext: Option<AutomaticCaptionExt>,
+    pub url: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Chapter {
-    pub start_time: i64,
-    pub end_time: i64,
-    pub title: String,
+    pub start_time: Option<i64>,
+    pub end_time: Option<i64>,
+    pub title: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Format {
     pub asr: Option<i64>,
     pub filesize: Option<i64>,
-    pub format_id: String,
-    pub format_note: String,
+    pub format_id: Option<String>,
+    pub format_note: Option<String>,
     pub fps: Option<i64>,
     pub height: Option<i64>,
-    pub quality: i64,
-    pub tbr: f64,
-    pub url: String,
+    pub quality: Option<i64>,
+    pub tbr: Option<f64>,
+    pub url: Option<String>,
     pub width: Option<i64>,
-    pub ext: YtdlManifestExt,
-    pub vcodec: String,
-    pub acodec: Acodec,
+    pub ext: Option<YtdlManifestExt>,
+    pub vcodec: Option<String>,
+    pub acodec: Option<Acodec>,
     pub abr: Option<f64>,
     pub downloader_options: Option<DownloaderOptions>,
     pub container: Option<Container>,
-    pub format: String,
-    pub protocol: Protocol,
-    pub http_headers: HttpHeaders,
+    pub format: Option<String>,
+    pub protocol: Option<Protocol>,
+    pub http_headers: Option<HttpHeaders>,
     pub vbr: Option<f64>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DownloaderOptions {
-    pub http_chunk_size: i64,
+    pub http_chunk_size: Option<i64>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HttpHeaders {
     #[serde(rename = "User-Agent")]
-    pub user_agent: String,
+    pub user_agent: Option<String>,
     #[serde(rename = "Accept-Charset")]
-    pub accept_charset: AcceptCharset,
+    pub accept_charset: Option<AcceptCharset>,
     #[serde(rename = "Accept")]
-    pub accept: Accept,
+    pub accept: Option<Accept>,
     #[serde(rename = "Accept-Encoding")]
-    pub accept_encoding: AcceptEncoding,
+    pub accept_encoding: Option<AcceptEncoding>,
     #[serde(rename = "Accept-Language")]
-    pub accept_language: AcceptLanguage,
+    pub accept_language: Option<AcceptLanguage>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -115,11 +115,11 @@ pub struct Subtitles {}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Thumbnail {
-    pub height: i64,
-    pub url: String,
-    pub width: i64,
-    pub resolution: String,
-    pub id: String,
+    pub height: Option<i64>,
+    pub url: Option<String>,
+    pub width: Option<i64>,
+    pub resolution: Option<String>,
+    pub id: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -159,11 +159,11 @@ pub enum YtdlManifestExt {
 #[derive(Debug, Serialize, Deserialize)]
 pub enum Container {
     #[serde(rename = "m4a_dash")]
-    M4A,
+    M4ADash,
     #[serde(rename = "mp4_dash")]
-    Mp4,
+    Mp4Dash,
     #[serde(rename = "webm_dash")]
-    Webm,
+    WebmDash,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
