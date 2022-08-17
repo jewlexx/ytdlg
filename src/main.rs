@@ -80,8 +80,6 @@ fn main() {
             });
     }));
 
-    panic!("woops");
-
     dl_binary();
 
     let options = eframe::NativeOptions::default();
