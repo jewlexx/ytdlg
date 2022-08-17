@@ -137,6 +137,12 @@ impl DownloadStatus {
 
 static BIN_DOWNLOAD: Mutex<DownloadStatus> = Mutex::new(DownloadStatus(0, 1));
 
+trait LockMap {
+    fn map<F, T>(&self, f: F) -> T
+    where
+        F: FnOnce(&mut DownloadStatus) -> T;
+}
+
 impl eframe::App for Application {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
