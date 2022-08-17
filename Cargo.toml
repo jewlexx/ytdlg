@@ -19,6 +19,7 @@ human-panic = "1.0.3"
 indicatif = { version = "0.17.0", features = ["tokio"] }
 lazy_static = "1.4.0"
 native-dialog = { version = "0.6.3", features = ["windows_dpi_awareness"] }
+parking_lot = "0.12.1"
 poll-promise = { version = "0.1.0", features = ["tokio"] }
 reqwest = { version = "0.11.11", features = ["blocking", "stream"] }
 serde = { version = "1.0.143", features = ["derive"] }

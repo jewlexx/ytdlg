@@ -4,6 +4,7 @@ use std::{fs::File, io::Read, os::unix::prelude::PermissionsExt, process::Comman
 
 use indicatif::ProgressBar;
 use native_dialog::MessageType;
+use parking_lot::Mutex;
 use poll_promise::Promise;
 use ytdl::YtdlManifest;
 
@@ -36,30 +37,6 @@ fn check_integrity() -> Result<(), &'static str> {
     }
 }
 
-async fn dl_binary() {
-    use consts::{BIN_DOWNLOAD_URL, BIN_PATH};
-
-    if !BIN_PATH.clone().exists() {
-        {
-            let mut dir_path = BIN_PATH.clone();
-            dir_path.pop();
-            std::fs::create_dir_all(dir_path).unwrap();
-        }
-
-        let mut target_file = File::create(BIN_PATH.clone()).unwrap();
-
-        let res = reqwest::get(BIN_DOWNLOAD_URL).await.unwrap();
-
-        let size = res.content_length().expect("failed to get content length");
-
-        target_file
-            .set_permissions(std::fs::Permissions::from_mode(0o755))
-            .unwrap();
-    }
-
-    check_integrity().expect("integrity check failed");
-}
-
 #[tokio::main]
 async fn main() {
     std::panic::set_hook(Box::new(|info| {
@@ -87,8 +64,6 @@ async fn main() {
             });
     }));
 
-    dl_binary().await;
-
     let options = eframe::NativeOptions::default();
     eframe::run_native(
         "Download and show an image with eframe/egui",
@@ -101,11 +76,39 @@ async fn main() {
 struct Application {
     yt_url: String,
     is_downloading: bool,
+    bin_downloaded: Option<Promise<()>>,
     manifest: Option<Promise<YtdlManifest>>,
 }
 
+static BIN_DOWNLOAD: Mutex<(u64, u64)> = Mutex::new((0, 1));
+
 impl eframe::App for Application {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        self.bin_downloaded
+            .get_or_insert(Promise::spawn_async(async {
+                use consts::{BIN_DOWNLOAD_URL, BIN_PATH};
+
+                if !BIN_PATH.clone().exists() {
+                    {
+                        let mut dir_path = BIN_PATH.clone();
+                        dir_path.pop();
+                        std::fs::create_dir_all(dir_path).unwrap();
+                    }
+
+                    let mut target_file = File::create(BIN_PATH.clone()).unwrap();
+
+                    let res = reqwest::get(BIN_DOWNLOAD_URL).await.unwrap();
+
+                    let size = res.content_length().expect("failed to get content length");
+
+                    target_file
+                        .set_permissions(std::fs::Permissions::from_mode(0o755))
+                        .unwrap();
+                }
+
+                check_integrity().expect("integrity check failed");
+            }));
+
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.vertical_centered(|ui| {
                 ui.text_edit_singleline(&mut self.yt_url);
