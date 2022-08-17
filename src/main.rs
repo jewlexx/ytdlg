@@ -123,9 +123,10 @@ impl eframe::App for Application {
             let downloaded = BIN_DOWNLOAD.lock().0;
             let total = BIN_DOWNLOAD.lock().1;
             if downloaded != total {
-                egui::ProgressBar::new((downloaded / total) as f32)
+                let w = egui::ProgressBar::new((downloaded / total) as f32)
                     .animate(true)
                     .show_percentage();
+                ui.add(w);
             }
 
             ui.vertical_centered(|ui| {
