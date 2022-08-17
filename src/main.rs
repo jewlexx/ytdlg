@@ -129,9 +129,7 @@ impl eframe::App for Application {
             let downloaded = BIN_DOWNLOAD.lock().0;
             let total = BIN_DOWNLOAD.lock().1;
             if downloaded != total {
-                let w = egui::ProgressBar::new((downloaded / total) as f32)
-                    .animate(true)
-                    .show_percentage();
+                let w = egui::ProgressBar::new((downloaded / total) as f32).animate(true);
                 ui.add(w);
                 return;
             }
