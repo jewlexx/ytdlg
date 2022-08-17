@@ -65,6 +65,8 @@ fn main() {
 
             eprintln!("{}", info);
         }
+
+        error(&msg);
     }));
 
     dl_binary();
