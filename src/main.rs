@@ -122,7 +122,11 @@ impl eframe::App for Application {
         egui::CentralPanel::default().show(ctx, |ui| {
             let downloaded = BIN_DOWNLOAD.lock().0;
             let total = BIN_DOWNLOAD.lock().1;
-            if downloaded != total {}
+            if downloaded != total {
+                egui::ProgressBar::new((downloaded / total) as f32)
+                    .animate(true)
+                    .show_percentage();
+            }
 
             ui.vertical_centered(|ui| {
                 ui.text_edit_singleline(&mut self.yt_url);
