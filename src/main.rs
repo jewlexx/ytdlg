@@ -99,6 +99,8 @@ async fn main() {
                     .set_permissions(std::fs::Permissions::from_mode(0o755))
                     .unwrap();
             }
+        } else {
+            BIN_DOWNLOAD.lock().1 = 0;
         }
 
         check_integrity().expect("integrity check failed");
