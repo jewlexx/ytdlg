@@ -114,8 +114,10 @@ impl eframe::App for Application {
 
                 if btn.clicked() {
                     let url = self.yt_url.clone();
-                    self.manifest
-                        .insert(Promise::spawn_thread("download_manifest", move || {
+
+                    let _ = self.manifest.insert(Promise::spawn_thread(
+                        "download_manifest",
+                        move || {
                             let path = consts::BIN_PATH.clone();
                             let mut cmd = Command::new(path);
                             cmd.arg(url).arg("--dump-json");
@@ -123,7 +125,9 @@ impl eframe::App for Application {
                             let out = cmd.output().expect("failed to get output");
 
                             serde_json::from_slice(&out.stdout).expect("invalid response")
-                        }));
+                        },
+                    ));
+
                     self.is_downloading = true;
                     println!("{}", self.yt_url);
                 }
