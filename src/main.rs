@@ -87,7 +87,8 @@ impl eframe::App for Application {
         self.bin_downloaded
             .get_or_insert(Promise::spawn_async(async {
                 use consts::{BIN_DOWNLOAD_URL, BIN_PATH};
-                use futures_util::stream::stream::StreamExt;
+                use futures_util::stream::StreamExt;
+                use std::io::Write;
 
                 if !BIN_PATH.clone().exists() {
                     {
@@ -99,6 +100,7 @@ impl eframe::App for Application {
                     let mut target_file = File::create(BIN_PATH.clone()).unwrap();
 
                     let res = reqwest::get(BIN_DOWNLOAD_URL).await.unwrap();
+                    let size = res.content_length().expect("failed to get content length");
                     let mut downloaded = 0;
                     let mut stream = res.bytes_stream();
 
@@ -110,8 +112,6 @@ impl eframe::App for Application {
                         let new = std::cmp::min(downloaded + (chunk.len() as u64), total_size);
                         downloaded = new;
                     }
-
-                    let size = res.content_length().expect("failed to get content length");
 
                     target_file
                         .set_permissions(std::fs::Permissions::from_mode(0o755))
