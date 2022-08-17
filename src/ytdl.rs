@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 pub struct YtdlManifest {
     pub id: Option<String>,
     pub title: Option<String>,
-    pub formats: Option<Vec<Format>>,
+    pub formats: Vec<Format>,
     pub thumbnails: Option<Vec<Thumbnail>>,
     pub description: Option<String>,
     pub upload_date: Option<String>,
