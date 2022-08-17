@@ -60,7 +60,8 @@ fn dl_binary() {
     check_integrity().expect("integrity check failed");
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     std::panic::set_hook(Box::new(|info| {
         use std::fmt::Write;
 
