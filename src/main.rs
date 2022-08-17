@@ -4,7 +4,7 @@ use std::{fs::File, io::Read, process::Command};
 
 use indicatif::ProgressBar;
 use native_dialog::MessageType;
-use parking_lot::Mutex;
+use parking_lot::{Mutex, MutexGuard};
 use poll_promise::Promise;
 use ytdl::YtdlManifest;
 
@@ -137,10 +137,19 @@ impl DownloadStatus {
 
 static BIN_DOWNLOAD: Mutex<DownloadStatus> = Mutex::new(DownloadStatus(0, 1));
 
-trait LockMap {
-    fn map<F, T>(&self, f: F) -> T
+trait LockMap<T> {
+    fn map<F, R>(&mut self, f: F) -> R
     where
-        F: FnOnce(&mut DownloadStatus) -> T;
+        F: FnOnce(&mut Self) -> R;
+}
+
+impl<'a, T> LockMap<T> for MutexGuard<'a, T> {
+    fn map<F, R>(&mut self, f: F) -> R
+    where
+        F: FnOnce(&mut Self) -> R,
+    {
+        f(self)
+    }
 }
 
 impl eframe::App for Application {
