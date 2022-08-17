@@ -84,6 +84,8 @@ async fn main() {
             let mut downloaded = 0;
             let mut stream = res.bytes_stream();
 
+            BIN_DOWNLOAD.lock().set_total(size);
+
             while let Some(item) = stream.next().await {
                 let chunk = item.unwrap();
                 target_file.write_all(&chunk).unwrap();
