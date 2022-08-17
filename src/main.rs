@@ -2,6 +2,7 @@
 
 use std::{fs::File, io::Read, os::unix::prelude::PermissionsExt, process::Command};
 
+use indicatif::ProgressBar;
 use native_dialog::MessageType;
 use poll_promise::Promise;
 use ytdl::YtdlManifest;
@@ -47,11 +48,9 @@ async fn dl_binary() {
 
         let mut target_file = File::create(BIN_PATH.clone()).unwrap();
 
-        reqwest::get(BIN_DOWNLOAD_URL)
-            .await
-            .unwrap()
-            .copy_to(&mut target_file)
-            .unwrap();
+        let res = reqwest::get(BIN_DOWNLOAD_URL).await.unwrap();
+
+        let size = res.content_length().expect("failed to get content length");
 
         target_file
             .set_permissions(std::fs::Permissions::from_mode(0o755))
@@ -88,7 +87,7 @@ async fn main() {
             });
     }));
 
-    dl_binary();
+    dl_binary().await;
 
     let options = eframe::NativeOptions::default();
     eframe::run_native(
