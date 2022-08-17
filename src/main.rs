@@ -131,6 +131,11 @@ impl eframe::App for Application {
                     self.is_downloading = true;
                     println!("{}", self.yt_url);
                 }
+
+                if let Some(manifest) = self.manifest.as_ref().and_then(|p| p.ready()) {
+                    self.is_downloading = false;
+                    println!("{:?}", manifest);
+                }
             });
         });
     }
