@@ -1,6 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
-use std::{fs::File, io::Read};
+use std::{fs::File, io::Read, process::Command};
 
 use native_dialog::MessageType;
 use poll_promise::Promise;
@@ -94,7 +94,7 @@ fn main() {
 
 #[derive(Default)]
 struct Application {
-    text: String,
+    yt_url: String,
     is_downloading: bool,
     manifest: Option<Promise<YtdlManifest>>,
 }
@@ -103,7 +103,7 @@ impl eframe::App for Application {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.vertical_centered(|ui| {
-                ui.text_edit_singleline(&mut self.text);
+                ui.text_edit_singleline(&mut self.yt_url);
 
                 if self.is_downloading {
                     ui.spinner();
@@ -113,8 +113,18 @@ impl eframe::App for Application {
                 let btn = ui.button("Download options");
 
                 if btn.clicked() {
+                    let url = self.yt_url.clone();
+                    self.manifest
+                        .insert(Promise::spawn_thread("download_manifest", move || {
+                            let path = consts::BIN_PATH.clone();
+                            let mut cmd = Command::new(path).arg(url).arg("--dump-json");
+
+                            let out = cmd.output().expect("failed to get output");
+
+                            serde_json::from_slice(&out.stdout).expect("invalid response")
+                        }));
                     self.is_downloading = true;
-                    println!("{}", self.text);
+                    println!("{}", self.yt_url);
                 }
             });
         });
