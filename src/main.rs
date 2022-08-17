@@ -59,7 +59,7 @@ fn main() {
         let mut msg = String::from("An error occurred:\n");
 
         if cfg!(debug_assertions) {
-            writeln!(s, "Panicked at: {}", info.location().unwrap()).unwrap();
+            writeln!(s, "   Panicked at: {}", info.location().unwrap()).unwrap();
 
             eprintln!("{}", info);
         }
