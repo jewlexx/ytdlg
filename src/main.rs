@@ -150,8 +150,10 @@ impl eframe::App for Application {
 
                     for format in &manifest.formats {
                         ui.horizontal(|ui| {
-                            ui.strong(format.format_id.as_ref().expect("no format id"));
-                            ui.small(format!("{:?}", format));
+                            let _ = ui.selectable_label(
+                                format.selected,
+                                format.format_id.as_ref().unwrap(),
+                            );
                         });
                     }
                 }
