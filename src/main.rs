@@ -1,7 +1,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
-use std::{fs::File, io::Read};
-
 use dl::{spawn_dl_thread, VideoDownloadInfo};
 use native_dialog::MessageType;
 use parking_lot::Mutex;

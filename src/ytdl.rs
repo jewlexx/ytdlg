@@ -3,9 +3,10 @@ use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
 fn check_integrity() -> Result<(), &'static str> {
-    use sha2::{Digest, Sha256};
+    use std::{fs::File, io::Read};
 
-    use consts::BIN_PATH;
+    use crate::consts::BIN_PATH;
+    use sha2::{Digest, Sha256};
 
     let mut target_file = File::open(BIN_PATH.clone()).unwrap();
     let mut target_bytes = Vec::new();
@@ -18,7 +19,7 @@ fn check_integrity() -> Result<(), &'static str> {
     let response = hasher.finalize();
     let mut sum_hex = [0; 32];
 
-    hex::decode_to_slice(sums::CHECK_SUM, &mut sum_hex).unwrap();
+    hex::decode_to_slice(crate::sums::CHECK_SUM, &mut sum_hex).unwrap();
 
     if response[..] == sum_hex {
         Ok(())
