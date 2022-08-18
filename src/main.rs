@@ -40,32 +40,34 @@ fn check_integrity() -> Result<(), &'static str> {
     }
 }
 
+fn panic_hook(info: &std::panic::PanicInfo) {
+    use std::fmt::Write;
+
+    use native_dialog::MessageDialog;
+
+    let mut msg = String::from("An error occurred:\n");
+
+    if cfg!(debug_assertions) {
+        writeln!(&mut msg, "   Panicked at: {}", info.location().unwrap()).unwrap();
+    }
+
+    if let Some(payload) = info.payload().downcast_ref::<&'static str>() {
+        writeln!(&mut msg, "   With Message: '{}', ", payload).unwrap();
+    }
+
+    MessageDialog::default()
+        .set_title("YTDLG Error")
+        .set_type(MessageType::Error)
+        .set_text(&msg)
+        .show_alert()
+        .unwrap_or_else(|_| {
+            eprintln!("{}", info);
+        });
+}
+
 #[tokio::main]
 async fn main() {
-    std::panic::set_hook(Box::new(|info| {
-        use std::fmt::Write;
-
-        use native_dialog::MessageDialog;
-
-        let mut msg = String::from("An error occurred:\n");
-
-        if cfg!(debug_assertions) {
-            writeln!(&mut msg, "   Panicked at: {}", info.location().unwrap()).unwrap();
-        }
-
-        if let Some(payload) = info.payload().downcast_ref::<&'static str>() {
-            writeln!(&mut msg, "   With Message: '{}', ", payload).unwrap();
-        }
-
-        MessageDialog::default()
-            .set_title("YTDLG Error")
-            .set_type(MessageType::Error)
-            .set_text(&msg)
-            .show_alert()
-            .unwrap_or_else(|_| {
-                eprintln!("{}", info);
-            });
-    }));
+    std::panic::set_hook(Box::new(panic_hook));
 
     dl_binary();
 
