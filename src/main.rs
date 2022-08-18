@@ -226,7 +226,11 @@ impl eframe::App for Application {
                                         sender
                                             .send(VideoDownloadInfo {
                                                 url: format.url.as_ref().unwrap().to_string(),
-                                                file_path: None,
+                                                file_path: Some(
+                                                    std::env::current_dir()
+                                                        .expect("woops")
+                                                        .join("yt.mp4"),
+                                                ),
                                                 format_id: format.format_id.clone(),
                                             })
                                             .await
