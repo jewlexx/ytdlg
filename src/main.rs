@@ -227,11 +227,7 @@ impl eframe::App for Application {
                                         sender
                                             .send(VideoDownloadInfo {
                                                 url: dl_url,
-                                                file_path: Some(
-                                                    std::env::current_dir()
-                                                        .expect("woops")
-                                                        .join("yt.mp4"),
-                                                ),
+                                                file_path: None,
                                                 format_id: format.format_id.clone(),
                                             })
                                             .await
