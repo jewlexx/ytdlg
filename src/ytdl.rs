@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct YtdlManifest {
     pub id: Option<String>,
     pub title: Option<String>,
@@ -54,20 +54,20 @@ pub struct YtdlManifest {
     pub filename: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct AutomaticCaption {
     pub ext: Option<AutomaticCaptionExt>,
     pub url: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Chapter {
     pub start_time: Option<i64>,
     pub end_time: Option<i64>,
     pub title: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Format {
     pub asr: Option<i64>,
     pub filesize: Option<i64>,
@@ -91,12 +91,12 @@ pub struct Format {
     pub vbr: Option<f64>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct DownloaderOptions {
     pub http_chunk_size: Option<i64>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct HttpHeaders {
     #[serde(rename = "User-Agent")]
     pub user_agent: Option<String>,
@@ -110,10 +110,10 @@ pub struct HttpHeaders {
     pub accept_language: Option<AcceptLanguage>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Subtitles {}
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Thumbnail {
     pub height: Option<i64>,
     pub url: Option<String>,
@@ -122,7 +122,7 @@ pub struct Thumbnail {
     pub id: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum Acodec {
     #[serde(rename = "mp4a.40.2")]
     Mp4A402,
@@ -132,7 +132,7 @@ pub enum Acodec {
     Opus,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum AutomaticCaptionExt {
     #[serde(rename = "srv1")]
     Srv1,
@@ -146,7 +146,7 @@ pub enum AutomaticCaptionExt {
     Vtt,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum YtdlManifestExt {
     #[serde(rename = "m4a")]
     M4A,
@@ -156,7 +156,7 @@ pub enum YtdlManifestExt {
     Webm,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum Container {
     #[serde(rename = "m4a_dash")]
     M4A,
@@ -166,31 +166,31 @@ pub enum Container {
     Webm,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum Accept {
     #[serde(rename = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")]
     TextHtmlApplicationXhtmlXmlApplicationXmlQ09Q08,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum AcceptCharset {
     #[serde(rename = "ISO-8859-1,utf-8;q=0.7,*;q=0.7")]
     Iso88591Utf8Q07Q07,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum AcceptEncoding {
     #[serde(rename = "gzip, deflate")]
     GzipDeflate,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum AcceptLanguage {
     #[serde(rename = "en-us,en;q=0.5")]
     EnUsEnQ05,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum Protocol {
     #[serde(rename = "https")]
     Https,

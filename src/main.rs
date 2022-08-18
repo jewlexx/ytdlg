@@ -200,7 +200,7 @@ impl eframe::App for Application {
                     // println!("{}", self.yt_url);
                 }
 
-                if let Some(manifest) = self.manifest.as_ref().and_then(|p| p.ready()) {
+                if let Some(manifest) = self.manifest.as_ref().and_then(|p| p.ready().cloned()) {
                     self.is_downloading = false;
                     if let Some(title) = &manifest.title {
                         ui.heading(title);
@@ -219,13 +219,16 @@ impl eframe::App for Application {
                                 ));
 
                                 if dl_btn.clicked() {
-                                    self.dl_sender
-                                        .blocking_send(VideoDownloadInfo {
-                                            url: format.url.as_ref().unwrap().to_string(),
-                                            file_path: None,
-                                            format_id: format.format_id.clone(),
-                                        })
-                                        .unwrap();
+                                    Promise::spawn_async(async {
+                                        self.dl_sender
+                                            .blocking_send(VideoDownloadInfo {
+                                                url: format.url.as_ref().unwrap().to_string(),
+                                                file_path: None,
+                                                format_id: format.format_id.clone(),
+                                            })
+                                            .unwrap();
+                                    })
+                                    .block_and_take();
                                 }
                             });
                         }
