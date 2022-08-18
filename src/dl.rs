@@ -27,12 +27,11 @@ pub fn spawn_dl_thread(mut rx: Receiver<VideoDownloadInfo>, tx: Sender<()>) {
 
                 println!("downloading");
 
-                let f = File::create("dl.log").unwrap();
-
                 Command::new(BIN_PATH.clone())
                     .args(&["-f", &msg_string.format_id, &msg_string.url])
                     .args(&output_args)
-                    .stdout(f)
+                    .stdout(File::create("dl.log").unwrap())
+                    .stderr(File::create("dl.err").unwrap())
                     .output()
                     .await
                     .unwrap();
