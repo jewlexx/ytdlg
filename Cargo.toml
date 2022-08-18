@@ -23,6 +23,7 @@ native-dialog = { version = "0.6.3", features = ["windows_dpi_awareness"] }
 parking_lot = "0.12.1"
 poll-promise = { version = "0.1.0", features = ["tokio"] }
 quork = { version = "0.1.6", default-features = false, features = ["parking_lot"] }
+rafy = "0.2.1"
 reqwest = { version = "0.11.11", features = ["blocking", "stream"] }
 serde = { version = "1.0.143", features = ["derive"] }
 serde_json = "1.0.83"
