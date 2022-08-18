@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{fs::File, path::PathBuf};
 
 use crate::consts::BIN_PATH;
 use tokio::{
@@ -25,12 +25,19 @@ pub fn spawn_dl_thread(mut rx: Receiver<VideoDownloadInfo>, tx: Sender<()>) {
                     vec![]
                 };
 
+                println!("downloading");
+
+                let f = File::create("dl.log").unwrap();
+
                 Command::new(BIN_PATH.clone())
                     .args(&["-f", &msg_string.format_id, &msg_string.url])
                     .args(&output_args)
+                    .stdout(f)
                     .output()
                     .await
                     .unwrap();
+
+                println!("downloaded");
 
                 tx.send(()).unwrap();
             }
