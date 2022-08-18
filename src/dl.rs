@@ -27,14 +27,14 @@ pub fn spawn_dl_thread(mut rx: Receiver<VideoDownloadInfo>, tx: Sender<()>) {
 
                 println!("downloading");
 
-                Command::new(BIN_PATH.clone())
+                let out = Command::new(BIN_PATH.clone())
                     .args(&["-f", &msg_string.format_id, &msg_string.url])
                     .args(&output_args)
                     .output()
                     .await
                     .unwrap();
 
-                println!("downloaded");
+                println!("{}", String::from_utf8_lossy(&out.stdout));
 
                 tx.send(()).unwrap();
             }
