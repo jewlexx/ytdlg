@@ -223,11 +223,12 @@ impl eframe::App for Application {
                                     let sender = self.dl_sender.clone();
                                     Promise::spawn_async(async move {
                                         sender
-                                            .blocking_send(VideoDownloadInfo {
+                                            .send(VideoDownloadInfo {
                                                 url: format.url.as_ref().unwrap().to_string(),
                                                 file_path: None,
                                                 format_id: format.format_id.clone(),
                                             })
+                                            .await
                                             .unwrap();
                                     })
                                     .block_and_take();
