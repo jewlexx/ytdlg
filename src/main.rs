@@ -229,7 +229,7 @@ impl eframe::App for Application {
                                                 format_id: format.format_id.clone(),
                                             })
                                             .await
-                                            .unwrap();
+                                            .err();
                                     })
                                     .block_and_take();
                                 }

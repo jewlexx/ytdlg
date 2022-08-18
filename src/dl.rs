@@ -15,23 +15,25 @@ pub struct VideoDownloadInfo {
 
 pub fn spawn_dl_thread(mut rx: Receiver<VideoDownloadInfo>, tx: Sender<()>) {
     tokio::spawn(async move {
-        while let Ok(msg) = rx.try_recv() {
-            let msg_string = msg;
+        loop {
+            if let Ok(msg) = rx.try_recv() {
+                let msg_string = msg;
 
-            let output_args = if let Some(ref path) = msg_string.file_path {
-                vec!["-o", path.as_os_str().to_str().unwrap()]
-            } else {
-                vec![]
-            };
+                let output_args = if let Some(ref path) = msg_string.file_path {
+                    vec!["-o", path.as_os_str().to_str().unwrap()]
+                } else {
+                    vec![]
+                };
 
-            Command::new(BIN_PATH.clone())
-                .args(&["-f", &msg_string.format_id, &msg_string.url])
-                .args(&output_args)
-                .output()
-                .await
-                .unwrap();
+                Command::new(BIN_PATH.clone())
+                    .args(&["-f", &msg_string.format_id, &msg_string.url])
+                    .args(&output_args)
+                    .output()
+                    .await
+                    .unwrap();
 
-            tx.send(()).unwrap();
+                tx.send(()).unwrap();
+            }
         }
     });
 }
