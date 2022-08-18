@@ -30,8 +30,6 @@ pub fn spawn_dl_thread(mut rx: Receiver<VideoDownloadInfo>, tx: Sender<()>) {
                 Command::new(BIN_PATH.clone())
                     .args(&["-f", &msg_string.format_id, &msg_string.url])
                     .args(&output_args)
-                    .stdout(File::create("dl.log").unwrap())
-                    .stderr(File::create("dl.err").unwrap())
                     .output()
                     .await
                     .unwrap();
