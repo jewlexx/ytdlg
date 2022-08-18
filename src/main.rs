@@ -209,7 +209,7 @@ impl eframe::App for Application {
                     for format in &manifest.formats {
                         if format.width.is_some() {
                             ui.horizontal(|ui| {
-                                let _ = ui.button("Download this format");
+                                let dl_btn = ui.button("Download this format");
                                 ui.strong(format!("Fps: {}", format.fps.as_ref().unwrap()));
 
                                 ui.strong(format!(
@@ -217,6 +217,14 @@ impl eframe::App for Application {
                                     format.width.as_ref().unwrap(),
                                     format.height.as_ref().unwrap()
                                 ));
+
+                                if dl_btn.clicked() {
+                                    self.dl_sender.send(VideoDownloadInfo {
+                                        url: format.url.unwrap(),
+                                        file_path: env,
+                                        format_id: (),
+                                    })
+                                }
                             });
                         }
                     }
