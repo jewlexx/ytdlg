@@ -9,6 +9,7 @@ use quork::LockMap;
 use ytdl::YtdlManifest;
 
 mod consts;
+mod dl;
 mod sums;
 mod ytdl;
 
