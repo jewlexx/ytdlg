@@ -1,4 +1,4 @@
-use std::{ffi::OsString, path::PathBuf};
+use std::path::PathBuf;
 
 use crate::consts::BIN_PATH;
 use tokio::{
@@ -6,6 +6,7 @@ use tokio::{
     sync::{mpsc::Receiver, watch::Sender},
 };
 
+#[derive(Debug)]
 pub struct VideoDownloadInfo {
     pub url: String,
     pub file_path: Option<PathBuf>,
@@ -17,8 +18,8 @@ pub fn spawn_dl_thread(mut rx: Receiver<VideoDownloadInfo>, tx: Sender<()>) {
         while let Ok(msg) = rx.try_recv() {
             let msg_string = msg;
 
-            let output_args = if let Some(path) = msg_string.file_path {
-                vec![OsString::from("-o").as_os_str(), path.as_os_str()]
+            let output_args = if let Some(ref path) = msg_string.file_path {
+                vec!["-o", path.as_os_str().to_str().unwrap()]
             } else {
                 vec![]
             };

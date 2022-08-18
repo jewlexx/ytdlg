@@ -219,11 +219,13 @@ impl eframe::App for Application {
                                 ));
 
                                 if dl_btn.clicked() {
-                                    self.dl_sender.send(VideoDownloadInfo {
-                                        url: format.url.unwrap(),
-                                        file_path: env,
-                                        format_id: (),
-                                    })
+                                    self.dl_sender
+                                        .blocking_send(VideoDownloadInfo {
+                                            url: format.url.as_ref().unwrap().to_string(),
+                                            file_path: None,
+                                            format_id: format.format_id.clone(),
+                                        })
+                                        .unwrap();
                                 }
                             });
                         }
