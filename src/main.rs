@@ -8,7 +8,7 @@ use parking_lot::Mutex;
 use poll_promise::Promise;
 use quork::LockMap;
 use tokio::process::Command;
-use ytdl::YtdlManifest;
+use ytdl::{dl_binary, YtdlManifest};
 
 mod consts;
 mod dl;
@@ -67,50 +67,7 @@ async fn main() {
             });
     }));
 
-    tokio::spawn(async {
-        use consts::{BIN_DOWNLOAD_URL, BIN_PATH};
-        use futures_util::stream::StreamExt;
-        use std::io::Write;
-
-        if !BIN_PATH.clone().exists() {
-            {
-                let mut dir_path = BIN_PATH.clone();
-                dir_path.pop();
-                std::fs::create_dir_all(dir_path).unwrap();
-            }
-
-            let mut target_file = File::create(BIN_PATH.clone()).unwrap();
-
-            let res = reqwest::get(BIN_DOWNLOAD_URL).await.unwrap();
-            let size = res.content_length().expect("failed to get content length");
-            println!("{}", size);
-            let mut downloaded = 0;
-            let mut stream = res.bytes_stream();
-
-            BIN_DOWNLOAD.lock().set_total(size);
-
-            while let Some(item) = stream.next().await {
-                let chunk = item.unwrap();
-                target_file.write_all(&chunk).unwrap();
-                let new = std::cmp::min(downloaded + (chunk.len() as u64), size);
-                downloaded = new;
-                println!("size: {}", new);
-                BIN_DOWNLOAD.lock().set_progress(new);
-            }
-
-            #[cfg(not(windows))]
-            {
-                use std::os::unix::prelude::PermissionsExt;
-                target_file
-                    .set_permissions(std::fs::Permissions::from_mode(0o755))
-                    .unwrap();
-            }
-        } else {
-            BIN_DOWNLOAD.lock().set_total(0);
-        }
-
-        check_integrity().expect("integrity check failed");
-    });
+    dl_binary();
 
     let (dl_spawn, dl_recv) = tokio::sync::mpsc::channel::<VideoDownloadInfo>(10);
     let (dl_fin_send, dl_finished) = tokio::sync::watch::channel::<bool>(false);
