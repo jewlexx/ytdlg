@@ -159,11 +159,11 @@ pub enum YtdlManifestExt {
 #[derive(Debug, Serialize, Deserialize)]
 pub enum Container {
     #[serde(rename = "m4a_dash")]
-    M4ADash,
+    M4A,
     #[serde(rename = "mp4_dash")]
-    Mp4Dash,
+    Mp4,
     #[serde(rename = "webm_dash")]
-    WebmDash,
+    Webm,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

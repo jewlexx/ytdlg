@@ -2,10 +2,10 @@
 
 use std::{fs::File, io::Read, process::Command};
 
-use indicatif::ProgressBar;
 use native_dialog::MessageType;
-use parking_lot::{Mutex, MutexGuard};
+use parking_lot::Mutex;
 use poll_promise::Promise;
+use quork::LockMap;
 use ytdl::YtdlManifest;
 
 mod consts;
@@ -192,7 +192,7 @@ impl eframe::App for Application {
                     for format in &manifest.formats {
                         if format.width.is_some() {
                             ui.horizontal(|ui| {
-                                let dl_btn = ui.button("Download this format");
+                                let _ = ui.button("Download this format");
                                 ui.strong(format!("Fps: {}", format.fps.as_ref().unwrap()));
 
                                 ui.strong(format!(
