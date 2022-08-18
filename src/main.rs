@@ -2,6 +2,7 @@
 
 use std::{fs::File, io::Read};
 
+use dl::{spawn_dl_thread, VideoDownloadInfo};
 use native_dialog::MessageType;
 use parking_lot::Mutex;
 use poll_promise::Promise;
@@ -111,19 +112,33 @@ async fn main() {
         check_integrity().expect("integrity check failed");
     });
 
+    let (dl_spawn, dl_recv) = tokio::sync::mpsc::channel::<VideoDownloadInfo>(10);
+    let (dl_fin_send, dl_finished) = tokio::sync::watch::channel::<()>(());
+
+    spawn_dl_thread(dl_recv, dl_fin_send);
+
     let options = eframe::NativeOptions::default();
     eframe::run_native(
         "Download and show an image with eframe/egui",
         options,
-        Box::new(|_cc| Box::new(Application::default())),
+        Box::new(|_cc| {
+            Box::new(Application {
+                yt_url: String::new(),
+                is_downloading: false,
+                manifest: None,
+                dl_sender: dl_spawn,
+                dl_receiver: dl_finished,
+            })
+        }),
     );
 }
 
-#[derive(Default)]
 struct Application {
     yt_url: String,
     is_downloading: bool,
     manifest: Option<Promise<YtdlManifest>>,
+    dl_sender: tokio::sync::mpsc::Sender<dl::VideoDownloadInfo>,
+    dl_receiver: tokio::sync::watch::Receiver<()>,
 }
 
 struct DownloadStatus(pub u64, pub u64);
