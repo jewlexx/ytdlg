@@ -221,6 +221,7 @@ impl eframe::App for Application {
                                 if dl_btn.clicked() {
                                     let format = format.clone();
                                     let sender = self.dl_sender.clone();
+                                    let mut recv = self.dl_receiver.clone();
                                     Promise::spawn_async(async move {
                                         sender
                                             .send(VideoDownloadInfo {
@@ -230,6 +231,8 @@ impl eframe::App for Application {
                                             })
                                             .await
                                             .err();
+
+                                        recv.changed().await.unwrap();
                                     })
                                     .block_and_take();
                                 }
