@@ -1,11 +1,12 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
-use std::{fs::File, io::Read, process::Command};
+use std::{fs::File, io::Read};
 
 use native_dialog::MessageType;
 use parking_lot::Mutex;
 use poll_promise::Promise;
 use quork::LockMap;
+use tokio::process::Command;
 use ytdl::YtdlManifest;
 
 mod consts;
@@ -170,12 +171,12 @@ impl eframe::App for Application {
 
                     let url = self.yt_url.clone();
 
-                    let _ = self.manifest.insert(Promise::spawn_blocking(|| {
+                    let _ = self.manifest.insert(Promise::spawn_async(async {
                         let path = consts::BIN_PATH.clone();
                         let mut cmd = Command::new(path);
                         cmd.arg(url).arg("--dump-json");
 
-                        let out = cmd.output().expect("failed to get output");
+                        let out = cmd.output().await.expect("failed to get output");
 
                         serde_json::from_slice(&out.stdout).expect("invalid response")
                     }));
