@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use crate::consts::BIN_PATH;
-use tokio::sync::mpsc::Receiver;
+use tokio::sync::{mpsc::Receiver, watch::Sender};
 
 pub struct VideoDownloadInfo {
     pub url: String,
@@ -9,14 +9,11 @@ pub struct VideoDownloadInfo {
     pub format_id: String,
 }
 
-pub fn spawn_dl_thread<T>(mut rx: Receiver<T>)
-where
-    T: std::fmt::Display + Send + 'static,
-{
+pub fn spawn_dl_thread(mut rx: Receiver<VideoDownloadInfo>, tx: Sender<()>) {
     tokio::spawn(async move {
         while let Ok(msg) = rx.try_recv() {
-            let msg_string = msg.to_string();
-            println!("{}", msg);
+            let msg_string = msg;
+            tx.send(()).unwrap();
         }
     });
 }
