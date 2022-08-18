@@ -220,12 +220,13 @@ impl eframe::App for Application {
 
                                 if dl_btn.clicked() {
                                     let format = format.clone();
+                                    let dl_url = self.yt_url.clone();
                                     let sender = self.dl_sender.clone();
                                     let mut recv = self.dl_receiver.clone();
                                     Promise::spawn_async(async move {
                                         sender
                                             .send(VideoDownloadInfo {
-                                                url: format.url.as_ref().unwrap().to_string(),
+                                                url: dl_url,
                                                 file_path: Some(
                                                     std::env::current_dir()
                                                         .expect("woops")
