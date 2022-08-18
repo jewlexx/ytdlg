@@ -126,6 +126,7 @@ async fn main() {
                 yt_url: String::new(),
                 is_downloading: false,
                 manifest: None,
+                dl_thread: None,
                 dl_sender: dl_spawn,
                 dl_receiver: dl_finished,
             })
@@ -137,6 +138,7 @@ struct Application {
     yt_url: String,
     is_downloading: bool,
     manifest: Option<Promise<YtdlManifest>>,
+    dl_thread: Option<Promise<()>>,
     dl_sender: tokio::sync::mpsc::Sender<dl::VideoDownloadInfo>,
     dl_receiver: tokio::sync::watch::Receiver<bool>,
 }
@@ -223,7 +225,7 @@ impl eframe::App for Application {
                                     let dl_url = self.yt_url.clone();
                                     let sender = self.dl_sender.clone();
                                     let mut recv = self.dl_receiver.clone();
-                                    Promise::spawn_async(async move {
+                                    self.dl_thread.replace(Promise::spawn_async(async move {
                                         sender
                                             .send(VideoDownloadInfo {
                                                 url: dl_url,
@@ -235,8 +237,7 @@ impl eframe::App for Application {
 
                                         recv.changed().await.unwrap();
                                         println!("downloaded");
-                                    })
-                                    .block_and_take();
+                                    }));
                                 }
                             });
                         }
