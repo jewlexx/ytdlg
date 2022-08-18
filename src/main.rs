@@ -219,8 +219,10 @@ impl eframe::App for Application {
                                 ));
 
                                 if dl_btn.clicked() {
-                                    Promise::spawn_async(async {
-                                        self.dl_sender
+                                    let format = format.clone();
+                                    let sender = self.dl_sender.clone();
+                                    Promise::spawn_async(async move {
+                                        sender
                                             .blocking_send(VideoDownloadInfo {
                                                 url: format.url.as_ref().unwrap().to_string(),
                                                 file_path: None,
