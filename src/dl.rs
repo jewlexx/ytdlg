@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{ffi::OsString, path::PathBuf};
 
 use crate::consts::BIN_PATH;
 use tokio::{
@@ -19,7 +19,7 @@ pub fn spawn_dl_thread(mut rx: Receiver<VideoDownloadInfo>, tx: Sender<()>) {
 
             Command::new(BIN_PATH.clone())
                 .args(&["-f", &msg_string.format_id, &msg_string.url])
-                .arg(&msg_string.file_path)
+                .args(&[&OsString::from("-o"), msg_string.file_path.as_os_str()])
                 .output()
                 .await
                 .unwrap();
