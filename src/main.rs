@@ -233,6 +233,7 @@ impl eframe::App for Application {
                                             .err();
 
                                         recv.changed().await.unwrap();
+                                        println!("downloaded");
                                     })
                                     .block_and_take();
                                 }
