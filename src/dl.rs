@@ -36,6 +36,7 @@ pub fn spawn_dl_thread(mut rx: Receiver<VideoDownloadInfo>, tx: Sender<bool>) {
 
                 println!("{}", String::from_utf8_lossy(&out.stdout));
 
+                // Flips it so that the other thread knows we are finished
                 tx.send(!*tx.borrow()).unwrap();
             }
         }
