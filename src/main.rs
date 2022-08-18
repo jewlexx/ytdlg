@@ -15,31 +15,6 @@ mod dl;
 mod sums;
 mod ytdl;
 
-fn check_integrity() -> Result<(), &'static str> {
-    use sha2::{Digest, Sha256};
-
-    use consts::BIN_PATH;
-
-    let mut target_file = File::open(BIN_PATH.clone()).unwrap();
-    let mut target_bytes = Vec::new();
-    target_file.read_to_end(&mut target_bytes).unwrap();
-
-    let mut hasher = Sha256::new();
-
-    hasher.update(&target_bytes);
-
-    let response = hasher.finalize();
-    let mut sum_hex = [0; 32];
-
-    hex::decode_to_slice(sums::CHECK_SUM, &mut sum_hex).unwrap();
-
-    if response[..] == sum_hex {
-        Ok(())
-    } else {
-        Err("Checksum mismatch")
-    }
-}
-
 fn panic_hook(info: &std::panic::PanicInfo) {
     use std::fmt::Write;
 
