@@ -113,7 +113,7 @@ async fn main() {
     });
 
     let (dl_spawn, dl_recv) = tokio::sync::mpsc::channel::<VideoDownloadInfo>(10);
-    let (dl_fin_send, dl_finished) = tokio::sync::watch::channel::<()>(());
+    let (dl_fin_send, dl_finished) = tokio::sync::watch::channel::<bool>(false);
 
     spawn_dl_thread(dl_recv, dl_fin_send);
 
@@ -138,7 +138,7 @@ struct Application {
     is_downloading: bool,
     manifest: Option<Promise<YtdlManifest>>,
     dl_sender: tokio::sync::mpsc::Sender<dl::VideoDownloadInfo>,
-    dl_receiver: tokio::sync::watch::Receiver<()>,
+    dl_receiver: tokio::sync::watch::Receiver<bool>,
 }
 
 struct DownloadStatus(pub u64, pub u64);

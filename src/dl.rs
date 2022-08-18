@@ -13,7 +13,7 @@ pub struct VideoDownloadInfo {
     pub format_id: String,
 }
 
-pub fn spawn_dl_thread(mut rx: Receiver<VideoDownloadInfo>, tx: Sender<()>) {
+pub fn spawn_dl_thread(mut rx: Receiver<VideoDownloadInfo>, tx: Sender<bool>) {
     tokio::spawn(async move {
         loop {
             if let Ok(msg) = rx.try_recv() {
@@ -36,7 +36,7 @@ pub fn spawn_dl_thread(mut rx: Receiver<VideoDownloadInfo>, tx: Sender<()>) {
 
                 println!("{}", String::from_utf8_lossy(&out.stdout));
 
-                tx.send(()).unwrap();
+                tx.send(!*tx.borrow()).unwrap();
             }
         }
     });
